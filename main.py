@@ -66,8 +66,9 @@ def view_websites():
        with open('passwords.json', 'r') as data:
            view = json.load(data)
            print("\nWebsites you saved...\n")
+           print("Website | Username")
            for x in view:
-               print(x['website'])
+               print(x['website']," |  ", x['username'])
            print('\n')
    except FileNotFoundError:
        print("\n[-] You have not saved any passwords!\n")
@@ -85,7 +86,7 @@ else:
 cipher = initialize_cipher(key)
 
 # Function to add (save password).
-def add_password(website, password):
+def add_password(website,username, password):
    # Check if passwords.json exists
    if not os.path.exists('passwords.json'):
        # If passwords.json doesn't exist, initialize it with an empty list
@@ -101,7 +102,7 @@ def add_password(website, password):
    # Encrypt the password
    encrypted_password = encrypt_password(cipher, password)
    # Create a dictionary to store the website and password
-   password_entry = {'website': website, 'password': encrypted_password}
+   password_entry = {'website':website,'username': username, 'password': encrypted_password}
    data.append(password_entry)
    # Save the updated list back to passwords.json
    with open('passwords.json', 'w') as file:
@@ -160,12 +161,15 @@ while True:
            print("4. Quit")
            password_choice = input("Enter your choice: ")
            if password_choice == '1':  # If a user wants to add a password
+               os.system("CLS")
                website = input("Enter website: ")
+               username = input("Enter username: ")
                password = getpass.getpass("Enter password: ")
                # Encrypt and add the password
-               add_password(website, password)
+               add_password(website,username,password)
                print("\n[+] Password added!\n")
            elif password_choice == '2':  # If a User wants to retrieve a password
+               os.system("CLS")
                website = input("Enter website: ")
                decrypted_password = get_password(website)
                if website and decrypted_password:
